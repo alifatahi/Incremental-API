@@ -3,10 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Lesson;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+
+/**
+ * Class LessonsController
+ * @package App\Http\Controllers
+ */
 class LessonsController extends Controller
 {
+    /*
+     * Status Code:
+     * 200 to end is Success
+     * 300 to end is Redirect
+     * 400 to end is Not Found
+     * 500 to end is Server Error
+     *
+     */
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +29,11 @@ class LessonsController extends Controller
      */
     public function index()
     {
-        return Lesson::all();
+        $lessons = Lesson::all();
+
+        return Response::json([
+            'data' => $lessons->toArray()
+        ], 200);
     }
 
     /**
@@ -46,7 +65,17 @@ class LessonsController extends Controller
      */
     public function show($id)
     {
-        //
+        $lesson = Lesson::find($id);
+
+        if (!$lesson) {
+            return Response::json([
+                'message' => 'Lesson Not Found'
+            ], 404);
+        }
+
+        return Response::json([
+            'data' => $lesson->toArray()
+        ], 200);
     }
 
     /**
