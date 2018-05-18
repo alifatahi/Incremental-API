@@ -17,7 +17,8 @@ class LessonsTableSeeder extends Seeder
         foreach (range(1, 30) as $index) {
             \App\Lesson::Create([
                 'title' => $faker->sentence(5),
-                'body'  => $faker->paragraph(4),
+                'body' => $faker->paragraph(4),
+                'some_bool' => $faker->boolean(),
             ]);
         }
     }

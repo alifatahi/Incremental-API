@@ -32,7 +32,7 @@ class LessonsController extends Controller
         $lessons = Lesson::all();
 
         return Response::json([
-            'data' => $lessons->toArray()
+            'data' => $this->transformCollection($lessons)
         ], 200);
     }
 
@@ -74,7 +74,7 @@ class LessonsController extends Controller
         }
 
         return Response::json([
-            'data' => $lesson->toArray()
+            'data' => $this->transform($lesson->toArray())
         ], 200);
     }
 
@@ -110,5 +110,29 @@ class LessonsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * This one for Collection
+     * @param $lessons
+     * @return array
+     */
+    private function transformCollection($lessons)
+    {
+        return array_map([$this, 'transform'], $lessons->toArray());
+    }
+
+    /**
+     *  This One is for map over single
+     * @param $lesson
+     * @return array
+     */
+    private function transform($lesson)
+    {
+        return [
+            'title' => $lesson['title'],
+            'body' => $lesson['body'],
+            'active' => (boolean)$lesson['some_bool'],
+        ];
     }
 }
