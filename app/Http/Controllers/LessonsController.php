@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Response;
  * Class LessonsController
  * @package App\Http\Controllers
  */
-class LessonsController extends Controller
+class LessonsController extends ApiController
 {
     /*
      * Status Code:
@@ -46,9 +46,9 @@ class LessonsController extends Controller
     {
         $lessons = Lesson::all();
 
-        return Response::json([
+        return $this->respond([
             'data' => $this->lessonTransformer->transformCollection($lessons->all())
-        ], 200);
+        ]);
     }
 
     /**
@@ -83,14 +83,12 @@ class LessonsController extends Controller
         $lesson = Lesson::find($id);
 
         if (!$lesson) {
-            return Response::json([
-                'message' => 'Lesson Not Found'
-            ], 404);
+            return $this->respondNotFound('Lesson Does Not Exists');
         }
 
-        return Response::json([
+        return $this->respond([
             'data' => $this->lessonTransformer->transform($lesson)
-        ], 200);
+        ]);
     }
 
     /**
