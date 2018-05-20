@@ -13,5 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         \App\Lesson::truncate();
         $this->call(LessonsTableSeeder::class);
+        $this->call(UserTableSeeder::class);
     }
 }

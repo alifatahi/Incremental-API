@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Handlers\Transformers\LessonTransformer;
 use App\Lesson;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 /**
@@ -35,6 +36,7 @@ class LessonsController extends ApiController
     public function __construct(LessonTransformer $lessonTransformer)
     {
         $this->lessonTransformer = $lessonTransformer;
+        $this->middleware('auth.basic', ['only' => 'store']);
     }
 
     /**
@@ -67,9 +69,18 @@ class LessonsController extends ApiController
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+
+        if (!Request::input('title') or !Request::input('body')) {
+            return $this->setStatusCode(422)
+                ->respondWithError('Parameters failed validation for a lesson.');
+        }
+
+        Lesson::create(Request::all());
+
+        return $this->respondCreated('Lessons Created');
+
     }
 
     /**
@@ -124,4 +135,6 @@ class LessonsController extends ApiController
     {
         //
     }
+
+
 }
