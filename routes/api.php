@@ -17,5 +17,7 @@ use Illuminate\Http\Request;
 //    return $request->user();
 //});
 Route::group(['prefix' => 'v1'], function () {
+    Route::get('lesson/{id}/tags', 'TagsController@index');
     Route::resource('lessons', 'LessonsController');
+    Route::resource('tags', 'TagsController', ['only' => ['index', 'show']]);
 });
