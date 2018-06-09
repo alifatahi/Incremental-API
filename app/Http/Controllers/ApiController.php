@@ -9,7 +9,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Response as IlluminateResponse;
-
 use Illuminate\Support\Facades\Response;
 
 /**
@@ -52,6 +51,26 @@ class ApiController extends Controller
             ->respondWithError($message);
     }
 
+
+    /**
+     * @param  $lessons
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function respondWithPagination($lessons, $data)
+    {
+        $data = array_merge($data, [
+            'paginator' => [
+                'total_count' => $lessons->total(),
+                'total_pages' => ceil($lessons->total() / $lessons->perPage()),
+                'current_page' => $lessons->currentPage(),
+                'limit' => $lessons->perPage()
+            ],
+        ]);
+        return $this->respond($data);
+    }
+
+
     /**
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
@@ -62,7 +81,6 @@ class ApiController extends Controller
             ->setStatusCode(IlluminateResponse::HTTP_INTERNAL_SERVER_ERROR)
             ->respondWithError($message);
     }
-
 
     /**
      * @param $data

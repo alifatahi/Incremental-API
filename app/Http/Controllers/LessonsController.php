@@ -6,7 +6,6 @@ use App\Handlers\Transformers\LessonTransformer;
 use App\Lesson;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Response;
 
 /**
  * Class LessonsController
@@ -46,10 +45,12 @@ class LessonsController extends ApiController
      */
     public function index()
     {
-        $lessons = Lesson::all();
+        $limit = Input::get('limit') ?: 3;
+        $lessons = Lesson::paginate($limit);
 
-        return $this->respond([
-            'data' => $this->lessonTransformer->transformCollection($lessons->all())
+//        use Our Method For Pagination in API Class
+        return $this->respondWithPagination($lessons, [
+            'data' => $this->lessonTransformer->transformCollection($lessons->all()),
         ]);
     }
 
@@ -101,40 +102,4 @@ class LessonsController extends ApiController
             'data' => $this->lessonTransformer->transform($lesson)
         ]);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-
 }
